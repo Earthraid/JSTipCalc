@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<link href="Content/bootstrap.css" rel="stylesheet" />
+<link href="style.css" rel="stylesheet" />
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div class="container">
+        <div class="topper col-sm-offset-5">
+
+            <h2>Tip Calculator</h2>
+
+        </div>
+        <div class="totalcalc">
+            <div id="calculator">
+
+                <!--Bill Amount-->
+                <form>
+                    <p>
+                        Bill
+                    </p>
+                    <input type="text" placeholder="$" id="billAmt">
+
+                    <!--Tip-->
+                    <p>
+                        Tip %
+                    </p>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
+                                <span>-</span>
+                            </button>
+                        </span>
+                        <input type="text" name="quant[1]" class="form-control input-number" id="tipAmt" value="1" min="1" max="100">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="quant[1]">
+                                <span>+</span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+
+                <!--Number of People-->
+                <p>
+                    Number of People
+                </p>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[2]">
+                            <span>-</span>
+                        </button>
+                    </span>
+                    <input type="text" name="quant[2]" class="form-control input-number" id="numPpl" value="1" min="1" max="100">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="quant[2]">
+                            <span>+</span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <!--calculator end-->
+
+            <!--Tip Each-->
+            <h4>Tip</h4>
+            <div>
+                <small id="tipEach">per person</small>
+                <sup>$</sup><span id="tip"></span>
+            </div>
+
+            <!--Total Each-->
+            <h4>Total</h4>
+            <div>
+                <small>per person</small>
+                <sup>$</sup><span id="each"></span>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
+
+<!--JS-->
+<script src="Scripts/jquery-3.0.0.js"></script>
+<script>
+    /* +- buttons */
+
+    $('.btn-number').click(function (e) {
+        e.preventDefault();
+
+        fieldName = $(this).attr('data-field');
+        type = $(this).attr('data-type');
+        var input = $("input[name='" + fieldName + "']");
+        var currentVal = parseInt(input.val());
+        if (!isNaN(currentVal)) {
+            if (type == 'minus') {
+
+                if (currentVal > input.attr('min')) {
+                    input.val(currentVal - 1).change();
+                }
+                if (parseInt(input.val()) == input.attr('min')) {
+                    $(this).attr('disabled', true);
+                }
+
+            } else if (type == 'plus') {
+
+                if (currentVal < input.attr('max')) {
+                    input.val(currentVal + 1).change();
+                }
+                if (parseInt(input.val()) == input.attr('max')) {
+                    $(this).attr('disabled', true);
+                }
+
+            }
+        } else {
+            input.val(0);
+        }
+    });
+    $('.input-number').focusin(function () {
+        $(this).data('oldValue', $(this).val());
+    });
+    $('.input-number').change(function () {
+
+        minValue = parseInt($(this).attr('min'));
+        maxValue = parseInt($(this).attr('max'));
+        valueCurrent = parseInt($(this).val());
+
+        name = $(this).attr('name');
+        if (valueCurrent >= minValue) {
+            $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+        } else {
+            $(this).val($(this).data('oldValue'));
+        }
+        if (valueCurrent <= maxValue) {
+            $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
+        } else {
+            ;
+            $(this).val($(this).data('oldValue'));
+        }
+
+
+    });
+    $(".input-number").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+            // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) ||
+            // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+            // let it happen, don't do anything
+            return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
+
+    /*calculations*/
+    $("#billAmt, #tipAmt, #numPeople").blur(function () {
+        var b = $("#billAmt").val();
+        var t = $("#tipAmt").val();
+        var n = $("#numPeople").val();
+
+        if ('' == b || '' == c || '' == n) {
+            return;
+        }
+        t /= 100;
+        
+        var e = (b + t) / n;
+        $("#each").val(e.toFixed(2));
+    });
+</script>
