@@ -4,8 +4,8 @@
 
 .container {
     text-align: center;
-    height: 525px;
-    width: 360px;
+    height: 545px;
+    width: 250px;
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px
 }
@@ -15,6 +15,7 @@
     border-top-right-radius: 10px;
     background: #4343dd;
     text-align: center;
+    font-size:x-large;
     margin: 0 auto;
     margin-top: 4%;
     padding-top: 2%;
@@ -72,10 +73,16 @@
     text-align:center;
     font-weight:500;
     font-size:larger;
+    margin-top:2%;
+    margin-bottom:-5%;
 }
 .bottomTotal{
     font-weight:900;
     font-size:xx-large;
     text-align:center;
+}
+.float-right{
+    font-size:larger;
+    font-weight:500;
 }
 

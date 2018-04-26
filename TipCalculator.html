@@ -21,7 +21,7 @@
                     <div>
                         Bill
                     </div>
-                    <input type="text" placeholder="$" id="billAmt">
+                    <div class="flex"><input type="text" placeholder="0.00" id="billAmt"></div>
 
                     <!--Tip-->
                     <div>
@@ -65,18 +65,20 @@
             <div class="eachTitles">Tip</div>
             <div>
                 <small id="tipEach">per person</small>
-                <sup>$</sup><span id="tip"></span>
+                <div class="float-right">
+                    <span>$</span><span id="tip">0.00</span>
+                </div>
             </div>
 
             <!--Total Each-->
             <div class="eachTitles">Total</div>
             <div>
                 <small>per person</small>
-                <sup>$</sup><span id="each"></span>
+                <div class="float-right"><span>$</span><span id="each">0.00</span></div>
             </div>
             <!--Full Amount-->
             <div class="fullTitle">Full Amount</div>
-            <div class="bottomTotal"><sup>$</sup><span id="fullAmount"></span></div>
+            <div class="bottomTotal"><span>$</span><span id="fullAmount">0.00</span></div>
         </div>
     </div>
 </body>
@@ -85,122 +87,123 @@
 <!--JS-->
 <script src="Scripts/jquery-3.0.0.js"></script>
 <script>
-$(document).ready(() => {
-    /* +- buttons */
+    $(document).ready(() => {
+        /* +- buttons */
 
-    $('.btn-number').click(function (e) {
-        e.preventDefault();
-
-        fieldName = $(this).attr('data-field');
-        type = $(this).attr('data-type');
-        var input = $("input[name='" + fieldName + "']");
-        var currentVal = parseInt(input.val());
-        if (!isNaN(currentVal)) {
-            if (type == 'minus') {
-
-                if (currentVal > input.attr('min')) {
-                    input.val(currentVal - 1).change();
-                }
-                if (parseInt(input.val()) == input.attr('min')) {
-                    $(this).attr('disabled', true);
-                }
-
-            } else if (type == 'plus') {
-
-                if (currentVal < input.attr('max')) {
-                    input.val(currentVal + 1).change();
-                }
-                if (parseInt(input.val()) == input.attr('max')) {
-                    $(this).attr('disabled', true);
-                }
-
-            }
-        } else {
-            input.val(0);
-        }
-    });
-    $('.input-number').focusin(function () {
-        $(this).data('oldValue', $(this).val());
-    });
-    $('.input-number').change(function () {
-
-        minValue = parseInt($(this).attr('min'));
-        maxValue = parseInt($(this).attr('max'));
-        valueCurrent = parseInt($(this).val());
-
-        name = $(this).attr('name');
-        if (valueCurrent >= minValue) {
-            $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
-        } else {
-            $(this).val($(this).data('oldValue'));
-        }
-        if (valueCurrent <= maxValue) {
-            $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
-        } else {
-            ;
-            $(this).val($(this).data('oldValue'));
-        }
-
-
-    });
-    $('.input-number').keydown(function (e) {
-        // Allow: backspace, delete, tab, escape, enter and .
-        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
-            // Allow: Ctrl+A
-            (e.keyCode == 65 && e.ctrlKey === true) ||
-            // Allow: home, end, left, right
-            (e.keyCode >= 35 && e.keyCode <= 39)) {
-            // let it happen, don't do anything
-            return;
-        }
-        // Ensure that it is a number and stop the keypress
-        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+        $('.btn-number').click(function (e) {
             e.preventDefault();
-        }
-    });
 
-    /*calculations*/
-    $('.input-number').change(function () {
+            fieldName = $(this).attr('data-field');
+            type = $(this).attr('data-type');
+            var input = $("input[name='" + fieldName + "']");
+            var currentVal = parseInt(input.val());
+            if (!isNaN(currentVal)) {
+                if (type == 'minus') {
 
-        var bill = parseInt($("#billAmt").val());
-        var tip = parseInt($("#tipAmt").val());
-        var people = parseInt($("#numPeople").val());
+                    if (currentVal > input.attr('min')) {
+                        input.val(currentVal - 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('min')) {
+                        $(this).attr('disabled', true);
+                    }
 
-        if ('' == bill || '' == tip || '' == people) {
-            return;
-        }
-        tip /= 100;
-        tip *= bill;
+                } else if (type == 'plus') {
 
-        var totalEach = (bill + tip) / people;
-        var tipEach = tip / people;
-        var fullAmount = bill + tip;
+                    if (currentVal < input.attr('max')) {
+                        input.val(currentVal + 1).change();
+                    }
+                    if (parseInt(input.val()) == input.attr('max')) {
+                        $(this).attr('disabled', true);
+                    }
 
-        $('#each').html(totalEach.toFixed(2).toString());
-        $('#tip').html(tipEach.toFixed(2).toString());
-        $('#fullAmount').html(fullAmount.toFixed(2).toString());
-    });
-    $('#billAmt').change(function () {
+                }
+            } else {
+                input.val(0);
+            }
+        });
+        $('.input-number').focusin(function () {
+            $(this).data('oldValue', $(this).val());
+        });
+        $('.input-number').change(function () {
 
-        var bill = parseInt($("#billAmt").val());
-        var tip = parseInt($("#tipAmt").val());
-        var people = parseInt($("#numPeople").val());
+            minValue = parseInt($(this).attr('min'));
+            maxValue = parseInt($(this).attr('max'));
+            valueCurrent = parseInt($(this).val());
 
-        if ('' == bill || '' == tip || '' == people) {
-            return;
-        }
+            name = $(this).attr('name');
+            if (valueCurrent >= minValue) {
+                $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                $(this).val($(this).data('oldValue'));
+            }
+            if (valueCurrent <= maxValue) {
+                $(".btn-number[data-type='plus'][data-field='" + name + "']").removeAttr('disabled')
+            } else {
+                ;
+                $(this).val($(this).data('oldValue'));
+            }
 
-        tip /= 100;
-        tip *= bill;
 
-        var totalEach = (bill + tip) / people;
-        var tipEach = tip / people;
-        var fullAmount = bill + tip;
-    
-        $('#each').html(totalEach.toFixed(2).toString());
-        $('#tip').html(tipEach.toFixed(2).toString());
-        $('#fullAmount').html(fullAmount.toFixed(2).toString());
-    });
+        });
+        $('.input-number').keydown(function (e) {
+            // Allow: backspace, delete, tab, escape, enter and .
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
+                // Allow: Ctrl+A
+                (e.keyCode == 65 && e.ctrlKey === true) ||
+                // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+
+        /*calculations*/
+        $('.input-number').change(function () {
+
+            var bill = parseInt($("#billAmt").val());
+            var tip = parseInt($("#tipAmt").val());
+            var people = parseInt($("#numPeople").val());
+
+            if ('' == bill || '' == tip || '' == people) {
+                return;
+            }
+            tip /= 100;
+            tip *= bill;
+
+            var totalEach = (bill + tip) / people;
+            var tipEach = tip / people;
+            var fullAmount = bill + tip;
+
+            $('#each').html(totalEach.toFixed(2).toString());
+            $('#tip').html(tipEach.toFixed(2).toString());
+            $('#fullAmount').html(fullAmount.toFixed(2).toString());
+
+        });
+        $('#billAmt').change(function () {
+
+            var bill = parseInt($("#billAmt").val());
+            var tip = parseInt($("#tipAmt").val());
+            var people = parseInt($("#numPeople").val());
+
+            if ('' == bill || '' == tip || '' == people) {
+                return;
+            }
+
+            tip /= 100;
+            tip *= bill;
+
+            var totalEach = (bill + tip) / people;
+            var tipEach = tip / people;
+            var fullAmount = bill + tip;
+
+            $('#each').html(totalEach.toFixed(2).toString());
+            $('#tip').html(tipEach.toFixed(2).toString());
+            $('#fullAmount').html(fullAmount.toFixed(2).toString());
+        });
 
     });
 </script>
