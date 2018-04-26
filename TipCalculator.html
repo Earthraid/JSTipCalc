@@ -4,13 +4,13 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>TIP CALC!!!!!</title>
 </head>
 <body>
     <div class="container">
         <div class="topper col-sm-offset-5">
 
-            <h2>Tip Calculator</h2>
+            <div>Tip Calculator</div>
 
         </div>
         <div class="totalcalc">
@@ -18,24 +18,24 @@
 
                 <!--Bill Amount-->
                 <form>
-                    <p>
+                    <div>
                         Bill
-                    </p>
+                    </div>
                     <input type="text" placeholder="$" id="billAmt">
 
                     <!--Tip-->
-                    <p>
+                    <div>
                         Tip %
-                    </p>
+                    </div>
                     <div class="input-group">
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
+                            <button type="button" class="btn btn-default btn-number minus" disabled="disabled" data-type="minus" data-field="quant[1]">
                                 <span>-</span>
                             </button>
                         </span>
-                        <input type="text" name="quant[1]" class="form-control input-number" id="tipAmt" value="1" min="1" max="100">
+                        <input type="text" name="quant[1]" class="form-control input-number" id="tipAmt" value="0" min="0" max="100">
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="quant[1]">
+                            <button type="button" class="btn btn-default btn-number plus" data-type="plus" data-field="quant[1]">
                                 <span>+</span>
                             </button>
                         </span>
@@ -43,39 +43,40 @@
                 </form>
 
                 <!--Number of People-->
-                <p>
+                <div>
                     Number of People
-                </p>
+                </div>
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-number" disabled="disabled" data-type="minus" data-field="quant[2]">
+                        <button type="button" class="btn btn-default btn-number minus" disabled="disabled" data-type="minus" data-field="quant[2]">
                             <span>-</span>
                         </button>
                     </span>
-                    <input type="text" name="quant[2]" class="form-control input-number" id="numPpl" value="1" min="1" max="100">
+                    <input type="text" name="quant[2]" class="form-control input-number" id="numPeople" value="1" min="1" max="100">
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="quant[2]">
+                        <button type="button" class="btn btn-default btn-number plus" data-type="plus" data-field="quant[2]">
                             <span>+</span>
                         </button>
                     </span>
                 </div>
             </div>
             <!--calculator end-->
-
             <!--Tip Each-->
-            <h4>Tip</h4>
+            <div class="eachTitles">Tip</div>
             <div>
                 <small id="tipEach">per person</small>
                 <sup>$</sup><span id="tip"></span>
             </div>
 
             <!--Total Each-->
-            <h4>Total</h4>
+            <div class="eachTitles">Total</div>
             <div>
                 <small>per person</small>
                 <sup>$</sup><span id="each"></span>
             </div>
-
+            <!--Full Amount-->
+            <div class="fullTitle">Full Amount</div>
+            <div class="bottomTotal"><sup>$</sup><span id="fullAmount"></span></div>
         </div>
     </div>
 </body>
@@ -84,6 +85,7 @@
 <!--JS-->
 <script src="Scripts/jquery-3.0.0.js"></script>
 <script>
+$(document).ready(() => {
     /* +- buttons */
 
     $('.btn-number').click(function (e) {
@@ -141,7 +143,7 @@
 
 
     });
-    $(".input-number").keydown(function (e) {
+    $('.input-number').keydown(function (e) {
         // Allow: backspace, delete, tab, escape, enter and .
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
             // Allow: Ctrl+A
@@ -158,17 +160,47 @@
     });
 
     /*calculations*/
-    $("#billAmt, #tipAmt, #numPeople").blur(function () {
-        var b = $("#billAmt").val();
-        var t = $("#tipAmt").val();
-        var n = $("#numPeople").val();
+    $('.input-number').change(function () {
 
-        if ('' == b || '' == c || '' == n) {
+        var bill = parseInt($("#billAmt").val());
+        var tip = parseInt($("#tipAmt").val());
+        var people = parseInt($("#numPeople").val());
+
+        if ('' == bill || '' == tip || '' == people) {
             return;
         }
-        t /= 100;
-        
-        var e = (b + t) / n;
-        $("#each").val(e.toFixed(2));
+        tip /= 100;
+        tip *= bill;
+
+        var totalEach = (bill + tip) / people;
+        var tipEach = tip / people;
+        var fullAmount = bill + tip;
+
+        $('#each').html(totalEach.toFixed(2).toString());
+        $('#tip').html(tipEach.toFixed(2).toString());
+        $('#fullAmount').html(fullAmount.toFixed(2).toString());
+    });
+    $('#billAmt').change(function () {
+
+        var bill = parseInt($("#billAmt").val());
+        var tip = parseInt($("#tipAmt").val());
+        var people = parseInt($("#numPeople").val());
+
+        if ('' == bill || '' == tip || '' == people) {
+            return;
+        }
+
+        tip /= 100;
+        tip *= bill;
+
+        var totalEach = (bill + tip) / people;
+        var tipEach = tip / people;
+        var fullAmount = bill + tip;
+    
+        $('#each').html(totalEach.toFixed(2).toString());
+        $('#tip').html(tipEach.toFixed(2).toString());
+        $('#fullAmount').html(fullAmount.toFixed(2).toString());
+    });
+
     });
 </script>
